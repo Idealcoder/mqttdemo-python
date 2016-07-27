@@ -1,0 +1,23 @@
+name: mqttdemo-python
+version: 2.1
+summary: Python MQTT demo client using Eclipse Paho
+description: This app is a small python client using Eclipse Paho, that reads system status (cpu, memory, disk etc) and publishes on "mqttdemo/status" topic. Also suscribes to "mqttdemo/commands" to recieve commands, e.g. "exit".
+confinement: strict
+
+apps:
+  mqttdemo-python: 
+    command: python3 $SNAP/bin/mqtt_client.py
+    plugs: [network,network-bind,mount-observe,network-observe,system-observe]
+
+parts:
+ mqtt:
+  plugin: python3
+  python-packages: [psutil,paho-mqtt]
+  build-packages:
+    - python3-dev
+    - build-essential
+  
+ publish:
+  plugin: copy
+  files:
+    ./mqtt_client.py: bin/mqtt_client.py
